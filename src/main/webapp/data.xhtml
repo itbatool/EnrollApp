@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Data Management</title>
+    <h:outputStylesheet name="primefaces.css" library="primefaces" />
+    <h:outputScript name="primefaces.js" library="primefaces" />
+    <h:outputStylesheet name="indexstyle.css" library="Css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</h:head>
+
+<h:body>
+    <div class="main-container">
+        <!-- Messages -->
+        <h:messages errorClass="alert alert-error"
+                    infoClass="alert alert-success"
+                    globalOnly="false"
+                    showDetail="true"
+                    showSummary="false" />
+
+        <div class="header">
+            <h1>Data Management</h1>
+            <p>Manage students, courses, faculties, majors, nationalities, and semesters</p>
+        </div>
+
+        <a href="index.xhtml" class="back-link">← Back to Main System</a>
+
+        <div class="tabs-container">
+            <div class="tab-nav">
+                <button class="tab-button" onclick="switchTab(event, 'students')">Students</button>
+                <button class="tab-button" onclick="switchTab(event, 'courses')">Courses</button>
+                <button class="tab-button" onclick="switchTab(event, 'faculties')">Faculties</button>
+                <button class="tab-button" onclick="switchTab(event, 'majors')">Majors</button>
+                <button class="tab-button" onclick="switchTab(event, 'nationalities')">Nationalities</button>
+                <button class="tab-button" onclick="switchTab(event, 'semesters')">Semesters</button>
+            </div>
+
+            <!-- Students Tab -->
+            <div id="students" class="tab-content">
+                <div class="info-card">
+                    <h3>#{studentBean.student.id == null ? 'Add New Student' : 'Update Student'}</h3>
+                    <h:form id="studentForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <h:outputLabel value="*Full Name" for="studentName" />
+                                <h:inputText id="studentName" value="#{studentBean.student.name}" required="true" />
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="*National ID" for="nationalId" />
+                                <h:inputText id="nationalId" value="#{studentBean.student.nationalId}" required="true" />
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="*Email" for="email" />
+                                <h:inputText id="email" value="#{studentBean.student.email}" required="true" />
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Birth Date" for="birthDate" />
+                                <h:inputText id="birthDate" type="date" value="#{studentBean.student.birthDate}" converter="#{studentBean}" />
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Mobile Number" for="mobileNo" />
+                                <h:inputText id="mobileNo" value="#{studentBean.student.mobileNo}" />
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="School Average" for="schoolAvg" />
+                                <h:inputText id="schoolAvg" value="#{studentBean.student.schoolAvg}" />
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Gender" for="gender" />
+                                <h:selectOneMenu id="gender" value="#{studentBean.student.gender}">
+                                    <f:selectItem itemValue="" itemLabel="Select Gender" />
+                                    <f:selectItem itemValue="Male" itemLabel="Male" />
+                                    <f:selectItem itemValue="Female" itemLabel="Female" />
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Nationality" for="nationality" />
+                                <h:selectOneMenu id="nationality" value="#{studentBean.student.nationality}" converter="#{studentBean.nationalityConverter}">
+                                    <f:selectItem itemLabel="Select Nationality" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{studentBean.nationalities}" var="nat" itemValue="#{nat}" itemLabel="#{nat.name}" />
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Faculty" for="faculty" />
+                                <h:selectOneMenu id="faculty" value="#{studentBean.student.faculty}" converter="#{studentBean.facultyConverter}">
+                                    <f:selectItem itemLabel="Select Faculty" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{studentBean.faculties}" var="fac" itemValue="#{fac}" itemLabel="#{fac.name}" />
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Major" for="major" />
+                                <h:selectOneMenu id="major" value="#{studentBean.student.major}" converter="#{studentBean.majorConverter}">
+                                    <f:selectItem itemLabel="Select Major" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{studentBean.majors}" var="m" itemValue="#{m}" itemLabel="#{m.name}" />
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <h:commandButton value="Clear" styleClass="btn btn-secondary" action="#{studentBean.clear}">
+                                <f:ajax render="studentForm" />
+                            </h:commandButton>
+                            <h:commandButton value="Add Student" styleClass="btn btn-primary" action="#{studentBean.saveStudent}" rendered="#{studentBean.student.id == null}" />
+                            <h:commandButton value="Update Student" styleClass="btn btn-success" action="#{studentBean.saveStudent}" rendered="#{studentBean.student.id != null}" />
+                        </div>
+                    </h:form>
+                </div>
+
+                <div class="info-card">
+                    <h3>Student List</h3>
+                    <h:dataTable value="#{studentBean.allStudents}" var="student" styleClass="data-table">
+                        <h:column>
+                            <f:facet name="header">ID</f:facet>
+                            #{student.id}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Name</f:facet>
+                            #{student.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">National ID</f:facet>
+                            #{student.nationalId}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Email</f:facet>
+                            #{student.email}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Birth Date</f:facet>
+                            #{student.birthDate}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Gender</f:facet>
+                            #{student.gender}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Faculty</f:facet>
+                            #{student.faculty.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Major</f:facet>
+                            #{student.major.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Actions</f:facet>
+                            <div class="action-buttons">
+                                <h:form style="display: inline;">
+                                    <h:commandButton value="Edit" styleClass="btn btn-secondary" action="#{studentBean.editStudent(student)}" onclick="scrollToTop()">
+                                        <f:ajax render=":studentForm" />
+                                    </h:commandButton>
+                                </h:form>
+                                <h:form style="display: inline;">
+                                    <h:commandButton value="Delete" styleClass="btn btn-danger" action="#{studentBean.deleteStudent(student)}" onclick="return confirm('Are you sure you want to delete this student?')" />
+                                </h:form>
+                            </div>
+                        </h:column>
+                    </h:dataTable>
+                </div>
+            </div>
+
+            <!-- Courses Tab -->
+            <div id="courses" class="tab-content">
+                <div class="info-card">
+                    <h3>#{courseBean.course.id == null ? 'Add New Course' : 'Update Course'}</h3>
+                    <h:form id="courseForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <h:outputLabel value="*Course Name" for="courseName" />
+                                <h:inputText id="courseName" value="#{courseBean.course.name}" required="true" />
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="*Credit Hours" for="creditHours" />
+                                <h:inputText id="creditHours" value="#{courseBean.course.creditHours}" required="true" />
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Faculty" for="courseFaculty" />
+                                <h:selectOneMenu id="courseFaculty" value="#{courseBean.course.faculty}" converter="#{courseBean.facultyConverter}">
+                                    <f:selectItem itemLabel="Select Faculty" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{courseBean.faculties}" var="fac" itemValue="#{fac}" itemLabel="#{fac.name}" />
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Description" for="description" />
+                                <h:inputTextarea id="description" value="#{courseBean.course.description}" rows="3" />
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Max Capacity" for="maxCapacity" />
+                                <h:inputText id="maxCapacity" value="#{courseBean.course.maxCapacity}" />
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Current Enrollment" for="currentEnrollment" />
+                                <h:inputText id="currentEnrollment" value="#{courseBean.course.currentEnrollment}" />
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Prerequisites" for="prerequisites" />
+                                <h:selectManyCheckbox id="prerequisites" value="#{courseBean.selectedPrerequisiteIds}" layout="lineDirection">
+                                    <f:selectItems value="#{courseBean.allCourses}" var="prereq" itemValue="#{prereq.id}" itemLabel="#{prereq.name}" />
+                                </h:selectManyCheckbox>
+                            </div>
+                        </div>
+                        <div class="checkbox-group">
+                            <h:selectBooleanCheckbox id="isActive" value="#{courseBean.course.isActive}" />
+                            <h:outputLabel value="Course Active" for="isActive" />
+                        </div>
+                        <div class="form-actions">
+                            <h:commandButton value="Clear" styleClass="btn btn-secondary" action="#{courseBean.clear}">
+                                <f:ajax render="courseForm" />
+                            </h:commandButton>
+                            <h:commandButton value="Add Course" styleClass="btn btn-primary" action="#{courseBean.addCourse}" rendered="#{courseBean.course.id == null}" />
+                            <h:commandButton value="Update Course" styleClass="btn btn-success" action="#{courseBean.updateCourse}" rendered="#{courseBean.course.id != null}" />
+                        </div>
+                    </h:form>
+                </div>
+
+                <div class="info-card">
+                    <h3>Course List</h3>
+                    <h:dataTable value="#{courseBean.allCourses}" var="course" styleClass="data-table">
+                        <h:column>
+                            <f:facet name="header">ID</f:facet>
+                            #{course.id}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Name</f:facet>
+                            #{course.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Credit Hours</f:facet>
+                            #{course.creditHours}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Faculty</f:facet>
+                            #{course.faculty.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Enrolled/Max</f:facet>
+                            #{course.currentEnrollment}/#{course.maxCapacity}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Status</f:facet>
+                            <span class="status-badge #{course.isActive ? 'status-active' : 'status-inactive'}">
+                                #{course.isActive ? 'Active' : 'Inactive'}
+                            </span>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Actions</f:facet>
+                            <div class="action-buttons">
+                                <h:form style="display: inline;">
+                                    <h:commandButton value="Edit" styleClass="btn btn-secondary" action="#{courseBean.loadCourseForEdit(course)}" onclick="scrollToTop()">
+                                        <f:ajax render=":courseForm" />
+                                    </h:commandButton>
+                                </h:form>
+                                <h:form style="display: inline;">
+                                    <h:commandButton value="Delete" styleClass="btn btn-danger" action="#{courseBean.deleteCourse(course)}" onclick="return confirm('Are you sure you want to delete this course?')" />
+                                </h:form>
+                            </div>
+                        </h:column>
+                    </h:dataTable>
+                </div>
+            </div>
+            <!-- Faculties Tab -->
+            <div id="faculties" class="tab-content">
+                <div class="info-card">
+                    <h3>#{facultyBean.faculty.id == null ? 'Add New Faculty' : 'Update Faculty'}</h3>
+                    <h:form id="facultyForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <h:outputLabel value="*Faculty Name" for="facultyName" />
+                                <h:inputText id="facultyName" value="#{facultyBean.faculty.name}" required="true" />
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <h:commandButton value="Clear" styleClass="btn btn-secondary" action="#{facultyBean.clear}">
+                                <f:ajax render="facultyForm" />
+                            </h:commandButton>
+                            <h:commandButton value="Add Faculty" styleClass="btn btn-primary" action="#{facultyBean.addFaculty}" rendered="#{facultyBean.faculty.id == null}" />
+                            <h:commandButton value="Update Faculty" styleClass="btn btn-success" action="#{facultyBean.updateFaculty}" rendered="#{facultyBean.faculty.id != null}" />
+                        </div>
+                    </h:form>
+                </div>
+
+                <div class="info-card">
+                    <h3>Faculty List</h3>
+                    <h:dataTable value="#{facultyBean.allFaculties}" var="fac" styleClass="data-table">
+                        <h:column>
+                            <f:facet name="header">ID</f:facet>
+                            #{fac.id}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Name</f:facet>
+                            #{fac.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Actions</f:facet>
+                            <div class="action-buttons">
+                                <h:form style="display: inline;">
+                                    <h:commandButton value="Edit" styleClass="btn btn-secondary" action="#{facultyBean.editFaculty(fac)}" onclick="scrollToTop()">
+                                        <f:ajax render=":facultyForm" />
+                                    </h:commandButton>
+                                </h:form>
+                                <h:form style="display: inline;">
+                                    <h:commandButton value="Delete" styleClass="btn btn-danger" action="#{facultyBean.deleteFaculty(fac)}" onclick="return confirm('Are you sure you want to delete this faculty?')" />
+                                </h:form>
+                            </div>
+                        </h:column>
+                    </h:dataTable>
+                </div>
+            </div>
+
+            <!-- Majors Tab -->
+            <div id="majors" class="tab-content">
+                <div class="info-card">
+                    <h3>#{majorBean.major.id == null ? 'Add New Major' : 'Update Major'}</h3>
+                    <h:form id="majorForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <h:outputLabel value="*Major Name" for="majorName" />
+                                <h:inputText id="majorName" value="#{majorBean.major.name}" required="true" />
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <h:commandButton value="Clear" styleClass="btn btn-secondary" action="#{majorBean.clear}">
+                                <f:ajax render="majorForm" />
+                            </h:commandButton>
+                            <h:commandButton value="Add Major" styleClass="btn btn-primary" action="#{majorBean.addMajor}" rendered="#{majorBean.major.id == null}" />
+                            <h:commandButton value="Update Major" styleClass="btn btn-success" action="#{majorBean.updateMajor}" rendered="#{majorBean.major.id != null}" />
+                        </div>
+                    </h:form>
+                </div>
+
+                <div class="info-card">
+                    <h3>Major List</h3>
+                    <h:dataTable value="#{majorBean.allMajors}" var="m" styleClass="data-table">
+                        <h:column>
+                            <f:facet name="header">ID</f:facet>
+                            #{m.id}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Name</f:facet>
+                            #{m.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Actions</f:facet>
+                            <div class="action-buttons">
+                                <h:form style="display: inline;">
+                                    <h:commandButton value="Edit" styleClass="btn btn-secondary" action="#{majorBean.editMajor(m)}" onclick="scrollToTop()">
+                                        <f:ajax render=":majorForm" />
+                                    </h:commandButton>
+                                </h:form>
+                                <h:form style="display: inline;">
+                                    <h:commandButton value="Delete" styleClass="btn btn-danger" action="#{majorBean.deleteMajor(m)}" onclick="return confirm('Are you sure you want to delete this major?')" />
+                                </h:form>
+                            </div>
+                        </h:column>
+                    </h:dataTable>
+                </div>
+            </div>
+
+            <!-- Nationalities Tab -->
+            <div id="nationalities" class="tab-content">
+                <div class="info-card">
+                    <h3>#{nationalityBean.nationality.id == null ? 'Add New Nationality' : 'Update Nationality'}</h3>
+                    <h:form id="nationalityForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <h:outputLabel value="*Nationality Name" for="nationalityName" />
+                                <h:inputText id="nationalityName" value="#{nationalityBean.nationality.name}" required="true" />
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <h:commandButton value="Clear" styleClass="btn btn-secondary" action="#{nationalityBean.clear}">
+                                <f:ajax render="nationalityForm" />
+                            </h:commandButton>
+                            <h:commandButton value="Add Nationality" styleClass="btn btn-primary" action="#{nationalityBean.addNationality}" rendered="#{nationalityBean.nationality.id == null}" />
+                            <h:commandButton value="Update Nationality" styleClass="btn btn-success" action="#{nationalityBean.updateNationality}" rendered="#{nationalityBean.nationality.id != null}" />
+                        </div>
+                    </h:form>
+                </div>
+
+                <div class="info-card">
+                    <h3>Nationality List</h3>
+                    <h:dataTable value="#{nationalityBean.allNationalities}" var="n" styleClass="data-table">
+                        <h:column>
+                            <f:facet name="header">ID</f:facet>
+                            #{n.id}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Name</f:facet>
+                            #{n.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Actions</f:facet>
+                            <div class="action-buttons">
+                                <h:form style="display: inline;">
+                                    <h:commandButton value="Edit" styleClass="btn btn-secondary" action="#{nationalityBean.editNationality(n)}" onclick="scrollToTop()">
+                                        <f:ajax render=":nationalityForm" />
+                                    </h:commandButton>
+                                </h:form>
+                                <h:form style="display: inline;">
+                                    <h:commandButton value="Delete" styleClass="btn btn-danger" action="#{nationalityBean.deleteNationality(n)}" onclick="return confirm('Are you sure you want to delete this nationality?')" />
+                                </h:form>
+                            </div>
+                        </h:column>
+                    </h:dataTable>
+                </div>
+            </div>
+
+            <!-- Semesters Tab -->
+            <div id="semesters" class="tab-content">
+                <div class="info-card">
+                    <h3>#{semesterBean.semester.id == null ? 'Add New Semester' : 'Update Semester'}</h3>
+                    <h:form id="semesterForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <h:outputLabel value="*Semester Name" for="semesterName" />
+                                <h:inputText id="semesterName" value="#{semesterBean.semester.name}" required="true" />
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Start Date" for="startDate" />
+                                <h:inputText id="startDate" type="date" value="#{semesterBean.semester.startDate}" converter="#{semesterBean}" />
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="End Date" for="endDate" />
+                                <h:inputText id="endDate" type="date" value="#{semesterBean.semester.endDate}" converter="#{semesterBean}" />
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Semester Type" for="semesterType" />
+                                <h:selectOneMenu id="semesterType" value="#{semesterBean.semester.semesterType}">
+                                    <f:selectItems value="#{semesterBean.semesterTypes}" var="type" itemValue="#{type}" itemLabel="#{type}" />
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="checkbox-group">
+                            <h:selectBooleanCheckbox id="isActive" value="#{semesterBean.semester.isActive}" />
+                            <h:outputLabel value="Active" for="isActive" />
+                        </div>
+                        <div class="form-actions">
+                            <h:commandButton value="Clear" styleClass="btn btn-secondary" action="#{semesterBean.clear}">
+                                <f:ajax render="semesterForm" />
+                            </h:commandButton>
+                            <h:commandButton value="Add Semester" styleClass="btn btn-primary" action="#{semesterBean.addSemester}" rendered="#{semesterBean.semester.id == null}" />
+                            <h:commandButton value="Update Semester" styleClass="btn btn-success" action="#{semesterBean.updateSemester}" rendered="#{semesterBean.semester.id != null}" />
+                        </div>
+                    </h:form>
+                </div>
+
+                <div class="info-card">
+                    <h3>Semester List</h3>
+                    <h:dataTable value="#{semesterBean.allSemesters}" var="s" styleClass="data-table">
+                        <h:column>
+                            <f:facet name="header">ID</f:facet>
+                            #{s.id}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Name</f:facet>
+                            #{s.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Start Date</f:facet>
+                            #{s.startDate}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">End Date</f:facet>
+                            #{s.endDate}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Type</f:facet>
+                            #{s.semesterType}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Status</f:facet>
+                            <span class="status-badge #{s.isActive ? 'status-active' : 'status-inactive'}">
+                                #{s.isActive ? 'Active' : 'Inactive'}
+                            </span>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Actions</f:facet>
+                            <div class="action-buttons">
+                                <h:form style="display: inline;">
+                                    <h:commandButton value="Edit" styleClass="btn btn-secondary" action="#{semesterBean.editSemester(s)}" onclick="scrollToTop()">
+                                        <f:ajax render=":semesterForm" />
+                                    </h:commandButton>
+                                </h:form>
+                                <h:form style="display: inline;">
+                                    <h:commandButton value="Delete" styleClass="btn btn-danger" action="#{semesterBean.deleteSemester(s)}" onclick="return confirm('Are you sure you want to delete this semester?')" />
+                                </h:form>
+                            </div>
+                        </h:column>
+                    </h:dataTable>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(event, tabName) {
+          document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+          document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+          document.getElementById(tabName).classList.add('active');
+          event.currentTarget.classList.add('active');
+        }
+
+        function scrollToTop() {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</h:body>
+</html>

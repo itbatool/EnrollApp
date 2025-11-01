@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Created-By: IntelliJ IDEA
+Built-By: DaDa
+Build-Jdk: Oracle OpenJDK 23.0.1
+Implementation-Title: task3
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.task3.ats
+Main-Class: ${start-class}
+

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+<h:head>
+    <title>Student Enrollment System</title>
+    <h:outputStylesheet name="indexstyle.css" library="Css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</h:head>
+
+<h:body>
+    <div class="main-container">
+        <div class="header">
+            <h1>Student Enrollment System</h1>
+            <p>Manage students, courses, and enrollments efficiently</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <h:link outcome="data" styleClass="dashboard-card">
+                <span class="card-icon">👥</span>
+                <h2>Data Management</h2>
+                <p>Manage students, courses, faculties, majors, nationalities, and semesters</p>
+            </h:link>
+
+            <h:link outcome="enrollment" styleClass="dashboard-card">
+                <span class="card-icon">📝</span>
+                <h2>Enrollment Management</h2>
+                <p>Enroll students in courses and manage enrollment status</p>
+            </h:link>
+
+            <h:link outcome="grades" styleClass="dashboard-card">
+                <span class="card-icon">📊</span>
+                <h2>Grade Management</h2>
+                <p>Assign grades, complete enrollments, and calculate GPA</p>
+            </h:link>
+        </div>
+    </div>
+</h:body>
+</html>

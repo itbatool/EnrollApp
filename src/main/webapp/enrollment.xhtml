@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Enrollment Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <h:outputStylesheet name="enrollmentstyle.css" library="Css"/>
+</h:head>
+
+<h:body>
+    <div class="main-container">
+        <h:messages errorClass="alert alert-error"
+                    infoClass="alert alert-success"
+                    globalOnly="false"
+                    showDetail="true"
+                    showSummary="false"/>
+
+        <div class="header">
+            <h1>Enrollment Management</h1>
+            <p>Enroll students in courses and manage enrollment status</p>
+        </div>
+
+        <a href="index.xhtml?tab=enrollments" class="back-link">← Back to Main System</a>
+
+        <div class="content-card">
+            <h2 class="section-title">Enroll Student in Course</h2>
+
+            <div class="info-box">
+                <p><strong>Note:</strong> Students must complete all prerequisite courses before enrolling</p>
+                <p>The semester must be active for enrollment</p>
+            </div>
+
+            <h:form>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <h:outputLabel value="Select Student" for="student"/>
+                        <h:selectOneMenu id="student" value="#{enrollmentBean.studentId}" required="true">
+                            <f:selectItem itemValue="" itemLabel="-- Select Student --"/>
+                            <f:selectItems value="#{enrollmentBean.allStudents}" var="student"
+                                           itemValue="#{student.id}" itemLabel="(ID: #{student.id}) #{student.name}"/>
+                        </h:selectOneMenu>
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel value="Select Course" for="course"/>
+                        <h:selectOneMenu id="course" value="#{enrollmentBean.courseId}" required="true">
+                            <f:selectItem itemValue="" itemLabel="-- Select Course --"/>
+                            <f:selectItems value="#{enrollmentBean.allCourses}" var="course"
+                                           itemValue="#{course.id}" itemLabel="#{course.name} (#{course.creditHours} Credits)"/>
+                        </h:selectOneMenu>
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel value="Select Semester" for="semester"/>
+                        <h:selectOneMenu id="semester" value="#{enrollmentBean.semesterId}" required="true">
+                            <f:selectItem itemValue="" itemLabel="-- Select Semester --"/>
+                            <f:selectItems value="#{enrollmentBean.allSemesters}" var="semester"
+                                           itemValue="#{semester.id}" itemLabel="#{semester.name} (#{semester.isActive ? 'Active' : 'Inactive'})"/>
+                        </h:selectOneMenu>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <h:commandButton value="Clear" styleClass="btn btn-secondary"
+                                     action="#{enrollmentBean.clear}"/>
+                    <h:commandButton value="Enroll Student" styleClass="btn btn-primary"
+                                     action="#{enrollmentBean.enrollStudent}"/>
+                </div>
+            </h:form>
+        </div>
+
+        <div class="content-card">
+            <h2 class="section-title">Current Enrollments</h2>
+
+            <h:dataTable value="#{enrollmentBean.allEnrollments}" var="enroll"
+                         styleClass="data-table" rendered="#{not empty enrollmentBean.allEnrollments}">
+                <h:column>
+                    <f:facet name="header">Student</f:facet>
+                    #{enroll.student.name}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Course</f:facet>
+                    #{enroll.course.name}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Semester</f:facet>
+                    #{enroll.semester.name}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Enrollment Date</f:facet>
+                    #{enroll.enrollmentDate}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Status</f:facet>
+                    <span class="status-badge status-#{enroll.enrollmentStatus.toString().toLowerCase()}">
+                            #{enroll.enrollmentStatus}
+                        </span>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Grade</f:facet>
+                    #{enroll.grade != null ? enroll.grade : 'N/A'}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Actions</f:facet>
+                    <h:form>
+                        <h:commandButton value="Drop"
+                                         styleClass="btn btn-danger"
+                                         action="#{enrollmentBean.dropEnrollment(enroll)}"
+                                         rendered="#{enroll.enrollmentStatus == 'ENROLLED'}"
+                                         onclick="return confirm('Drop this enrollment?')"/>
+                    </h:form>
+                </h:column>
+            </h:dataTable>
+
+            <h:panelGroup rendered="#{empty enrollmentBean.allEnrollments}">
+                <p style="text-align: center; color: var(--text-muted); padding: 40px;">
+                    No enrollments found. Start by enrolling students in courses above.
+                </p>
+            </h:panelGroup>
+        </div>
+    </div>
+</h:body>
+</html>

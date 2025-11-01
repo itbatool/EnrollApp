@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Grade Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <h:outputStylesheet name="enrollmentstyle.css" library="Css"/>
+</h:head>
+
+<h:body>
+    <div class="main-container">
+        <h:messages errorClass="alert alert-error"
+                    infoClass="alert alert-success"
+                    globalOnly="false"
+                    showDetail="true"
+                    showSummary="false"/>
+
+        <div class="header">
+            <h1>Grade Management</h1>
+            <p>Assign grades, complete enrollments, and calculate GPA</p>
+        </div>
+
+        <a href="index.xhtml" class="back-link">← Back to Main System</a>
+
+        <div class="content-card">
+            <h2 class="section-title">Active Enrollments (Pending Completion)</h2>
+
+            <h:form>
+                <h:dataTable value="#{enrollmentBean.activeEnrollments}" var="enroll"
+                             styleClass="data-table"
+                             rendered="#{not empty enrollmentBean.activeEnrollments}">
+
+                    <h:column>
+                        <f:facet name="header">Student</f:facet>
+                        #{enroll.student.name}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">National ID</f:facet>
+                        #{enroll.student.nationalId}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Course</f:facet>
+                        #{enroll.course.name}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Credits</f:facet>
+                        #{enroll.course.creditHours}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Semester</f:facet>
+                        #{enroll.semester.name}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Status</f:facet>
+                        <span class="status-badge status-#{enroll.enrollmentStatus.toString().toLowerCase()}">
+                                #{enroll.enrollmentStatus}
+                            </span>
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Grade (0-100)</f:facet>
+                        <h:inputText value="#{enrollmentBean.gradeInputs[enroll.id]}"
+                                     styleClass="grade-input"
+                                     maxlength="5">
+                            <f:convertNumber maxFractionDigits="2"/>
+                        </h:inputText>
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Complete"
+                                         styleClass="btn btn-success"
+                                         action="#{enrollmentBean.completeEnrollment(enroll.id)}"
+                                         onclick="return confirm('Complete this enrollment with the entered grade?')"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+
+            <h:panelGroup rendered="#{empty enrollmentBean.activeEnrollments}">
+                <p style="text-align: center; color: var(--text-muted); padding: 40px;">
+                    No active enrollments pending completion.
+                </p>
+            </h:panelGroup>
+        </div>
+
+        <div class="content-card">
+            <h2 class="section-title">Student GPA Calculator</h2>
+
+            <h:form>
+                <div style="display: flex; gap: 15px; align-items: flex-end; margin-bottom: 30px;">
+                    <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                        <h:outputLabel value="Select Student" for="studentSelect"/>
+                        <h:selectOneMenu id="studentSelect" value="#{enrollmentBean.selectedStudentId}">
+                            <f:selectItem itemValue="" itemLabel="-- Select Student --"/>
+                            <f:selectItems value="#{enrollmentBean.allStudents}" var="student"
+                                           itemValue="#{student.id}" itemLabel="(ID: #{student.id}) #{student.name}"/>
+                        </h:selectOneMenu>
+                    </div>
+
+                    <h:commandButton value="Calculate GPA"
+                                     styleClass="btn btn-primary"
+                                     action="#{enrollmentBean.calculateGPA}"/>
+                </div>
+            </h:form>
+
+            <h:panelGroup rendered="#{enrollmentBean.calculatedGPA != null}">
+                <div class="gpa-result-inline">
+                    <span class="gpa-label">GPA:</span>
+                    <span class="gpa-value-inline">#{enrollmentBean.calculatedGPA}</span>
+                    <span class="gpa-scale-inline">(Scale: 0.0 - 4.0)</span>
+                </div>
+            </h:panelGroup>
+        </div>
+
+        <div class="content-card">
+            <h2 class="section-title">Completed Enrollments</h2>
+
+            <h:dataTable value="#{enrollmentBean.completedEnrollments}" var="enroll"
+                         styleClass="data-table"
+                         rendered="#{not empty enrollmentBean.completedEnrollments}">
+
+                <h:column>
+                    <f:facet name="header">Student</f:facet>
+                    #{enroll.student.name}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Course</f:facet>
+                    #{enroll.course.name}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Semester</f:facet>
+                    #{enroll.semester.name}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Grade</f:facet>
+                    <span class="grade-display">#{enroll.grade}</span>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Status</f:facet>
+                    <span class="status-badge status-completed">
+                            #{enroll.enrollmentStatus}
+                        </span>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Enrollment Date</f:facet>
+                    #{enroll.enrollmentDate}
+                </h:column>
+            </h:dataTable>
+
+            <h:panelGroup rendered="#{empty enrollmentBean.completedEnrollments}">
+                <p style="text-align: center; color: var(--text-muted); padding: 40px;">
+                    No completed enrollments yet.
+                </p>
+            </h:panelGroup>
+        </div>
+    </div>
+</h:body>
+</html>
