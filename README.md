@@ -73,9 +73,9 @@ src/main/java/com/enrollapp/
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-<img width="1080" height="1920" alt="photo-collage png (2)" src="https://github.com/user-attachments/assets/a2799b7a-ec01-45c2-b462-2123e05b5a9a" />
-
-<img width="1080" height="1920" alt="photo-collage png (1)" src="https://github.com/user-attachments/assets/13458dc7-ece6-47a7-9976-0ff912c6105e" />
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/a2799b7a-ec01-45c2-b462-2123e05b5a9a" width="300" />
+  <img src="https://github.com/user-attachments/assets/13458dc7-ece6-47a7-9976-0ff912c6105e" width="300" />
+</p>
 
 
