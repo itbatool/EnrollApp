@@ -1,3 +1,5 @@
+<img width="1918" height="700" alt="image" src="https://github.com/user-attachments/assets/ab33bef5-8204-4182-9713-b9d30c18d0df" />
+
 # EnrollApp
 A Spring Boot + JSF web application for managing student enrollments, courses, and grades with prerequisite validation and GPA calculation.
 
@@ -70,3 +72,7 @@ src/main/java/com/enrollapp/
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+<img width="1080" height="1920" alt="photo-collage png (1)" src="https://github.com/user-attachments/assets/13458dc7-ece6-47a7-9976-0ff912c6105e" /><img width="1080" height="1920" alt="photo-collage png (2)" src="https://github.com/user-attachments/assets/a2799b7a-ec01-45c2-b462-2123e05b5a9a" />
+
+
