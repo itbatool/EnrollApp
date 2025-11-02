@@ -19,7 +19,8 @@ A Spring Boot + JSF web application for managing student enrollments, courses, a
 ## Requirements
 - Java 17+
 - Maven 3.6+
-- MySQL 8.0+
+- MySQL Connector [![MySQL](https://img.shields.io/badge/MySQL%20Connector--J-9.5.0-blue)](https://dev.mysql.com/downloads/connector/j/9.5.html)
+
 
 ## Setup
 
