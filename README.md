@@ -60,7 +60,7 @@ or run Main.java from your IDE.
 
 ## Project Structure
 ```
-src/main/java/com/Batjsf/
+src/main/java/com/enrollapp/
 ├── controller/     # Web controllers (HomeController)
 ├── model/          # Entity classes
 ├── repository/     # JPA repositories

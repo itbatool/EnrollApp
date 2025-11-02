@@ -12,12 +12,12 @@
 		<relativePath/>
 	</parent>
 
-	<groupId>com.exercise</groupId>
-	<artifactId>demo</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<groupId>com.enrollapp</groupId>
+	<artifactId>Enroll_App</artifactId>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
-	<name>demo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>Enroll_App</name>
+	<description>Spring Boot + JSF Enroll App</description>
 
 	<properties>
 		<java.version>21</java.version>
