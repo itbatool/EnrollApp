@@ -27,7 +27,7 @@ A Spring Boot + JSF web application for managing student enrollments, courses, a
    cd EnrollApp
 ```
 
-2. **Create database**
+2. **Create MySQL database**
 ```sql
    CREATE DATABASE EnrollApp;
 ```
@@ -41,10 +41,10 @@ A Spring Boot + JSF web application for managing student enrollments, courses, a
 ```
 
 4. **Run application**
+or run Main.java from your IDE
 ```bash
    mvn spring-boot:run
 ```
-or run Main.java from your IDE.
 
 5. **Access application**
     - Main: http://localhost:9090/
